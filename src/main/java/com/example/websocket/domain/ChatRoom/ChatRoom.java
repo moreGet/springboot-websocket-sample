@@ -29,11 +29,13 @@ public class ChatRoom {
             sessions.add(session);
             chatMessage.setMessage(chatMessage.getSender() + "님이 입장 했습니다.");
         }
+
+        sendMessage(chatMessage, chatService);
     }
 
     public <T> void sendMessage(T message, ChatService chatService) {
         sessions.parallelStream().forEach(session -> {
-
+            chatService.sendMessage(session, message);
         });
     }
 }
