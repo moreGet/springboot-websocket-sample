@@ -1,6 +1,7 @@
 package com.example.websocket.service;
 
 import com.example.websocket.chatting.dto.ChatRoomResponseDto;
+import com.example.websocket.domain.ChatRoom.ChatRoom;
 import com.example.websocket.domain.ChatRoom.ChatRoomRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
@@ -41,6 +42,16 @@ public class ChatService {
                 });
     }
 
+    // 채팅방 ID조회
+    public ChatRoom findById(String roomId) {
+        log.debug("채팅방 ID 단일 조회");
+        return Optional.ofNullable(
+                chatRoomRepository.findRoomById(roomId))
+                .orElseThrow(() -> {
+                   throw new IllegalArgumentException("해당 ID로 조회할 수 없습니다.");
+                });
+    }
+    
     // 메세지를 보낼때 어떤 유형의 message 파라메터 이던간 JSON STRING 형태로 전송
     public <T> void sendMessage(WebSocketSession session, T message) {
         log.debug("메세지 송신");
