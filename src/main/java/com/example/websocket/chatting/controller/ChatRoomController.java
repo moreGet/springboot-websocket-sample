@@ -30,8 +30,8 @@ public class ChatRoomController {
     @PostMapping("/createRoom")
     @ResponseBody
     public ResponseEntity<ChatRoomResponseDto> createRoom(
-            @RequestBody @Valid ChatRoomRequestDto chatRoomReqDto) {
-        return ResponseEntity.ok(chatService.createRoom(chatRoomReqDto.getName()));
+            @RequestBody @Valid String roomId) {
+        return ResponseEntity.ok(chatService.createRoom(roomId));
     }
 
     @GetMapping("/findAllRoom")
@@ -55,11 +55,11 @@ public class ChatRoomController {
     }
 
     // 특정 채팅방 조회
-//    @RequestMapping(value = "/room/{roomId}", method = RequestMethod.POST)
     @PostMapping("/room/{roomId}")
     @ResponseBody
-    public ChatRoom roomInfo(@PathVariable String roomId) {
+    public void roomInfo(@PathVariable String roomId) {
         log.debug("##### 방 생성 동작");
-        return chatService.findById(roomId);
+        log.debug(roomId);
+//        return chatService.findById(roomId);
     }
 }
