@@ -1,0 +1,21 @@
+## PROFILE OPTION
+spring:
+  profiles:
+    active: local
+  devtools:
+    livereload: ## STATIC RELOAD
+      enabled: true
+    restart: ## RESTART WAS
+      enabled: false
+  freemarker:
+    cache: false
+
+## SERVER PORT
+server:
+  port: 8080
+
+## LOG LEVEL
+logging:
+  level:
+    root: info
+    com.example.websocket: debug

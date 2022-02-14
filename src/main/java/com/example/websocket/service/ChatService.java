@@ -7,10 +7,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
-import org.springframework.web.socket.TextMessage;
-import org.springframework.web.socket.WebSocketSession;
 
-import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -25,7 +22,8 @@ public class ChatService {
     // 레포지토리 에서 생성 후 조회
     public ChatRoomResponseDto createRoom(String name) {
         log.debug("채팅방 생성");
-        return Optional.ofNullable(new ChatRoomResponseDto(chatRoomRepository.createRoom(name))).orElseThrow(() -> {
+        return Optional.ofNullable(
+                new ChatRoomResponseDto(chatRoomRepository.createRoom(name))).orElseThrow(() -> {
                     throw new IllegalArgumentException("채팅방이 생성되지 않았습니다.");
                 });
     }
@@ -51,14 +49,14 @@ public class ChatService {
                    throw new IllegalArgumentException("해당 ID로 조회할 수 없습니다.");
                 });
     }
-    
+
     // 메세지를 보낼때 어떤 유형의 message 파라메터 이던간 JSON STRING 형태로 전송
-    public <T> void sendMessage(WebSocketSession session, T message) {
-        log.debug("메세지 송신");
-        try {
-            session.sendMessage(new TextMessage(objectMapper.writeValueAsString(message)));
-        } catch (IOException ioe) {
-            log.error(ioe.getMessage(), ioe);
-        }
-    }
+//    public <T> void sendMessage(WebSocketSession session, T message) {
+//        log.debug("메세지 송신");
+//        try {
+//            session.sendMessage(new TextMessage(objectMapper.writeValueAsString(message)));
+//        } catch (IOException ioe) {
+//            log.error(ioe.getMessage(), ioe);
+//        }
+//    }
 }

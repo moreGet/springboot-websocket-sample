@@ -1,28 +1,33 @@
 package com.example.websocket.config;
 
-import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.web.socket.WebSocketHandler;
-import org.springframework.web.socket.config.annotation.EnableWebSocket;
-import org.springframework.web.socket.config.annotation.WebSocketConfigurer;
-import org.springframework.web.socket.config.annotation.WebSocketHandlerRegistry;
+import org.springframework.messaging.simp.config.MessageBrokerRegistry;
+import org.springframework.web.socket.config.annotation.EnableWebSocketMessageBroker;
+import org.springframework.web.socket.config.annotation.StompEndpointRegistry;
+import org.springframework.web.socket.config.annotation.WebSocketMessageBrokerConfigurer;
 
-
-@RequiredArgsConstructor // 생성자 주입 방식을 위해 선언
-@EnableWebSocket // 웹소켓 활성화
+@EnableWebSocketMessageBroker
 @Configuration // 설정 클래스
-public class WebSockConfig implements WebSocketConfigurer {
-    private final WebSocketHandler webSocketHandler;
+public class WebSockConfig implements WebSocketMessageBrokerConfigurer {
 
     /**
-     * 1. WebSocket 접속을 위해 엔드포인트는 /ws/chat로 설정
-     * 2. 도메인이 다른 서버에서도 접속 가능 하도록 CORS : setAllowedOrigins("*") 처리
-     * 3. 클라이언트가 ws://localhost:8080/ws/chat 으로 커넥션을 연결하고 메세지 통신을 하기 위한 기본 준비 끝.
-     * 4. 아직 화면 구현이 안되어 있으므로 크롬 플러그인인 웹소켓 TEST 클라이언트 설치
-     * 5. https://chrome.google.com/webstore/detail/websocket-test-client/fgponpodhbmadfljofbimhhlengambbn/related
+     * Stomp를 사용하기 위해 WebSocketMessageBrokerConfigurer를 선언후 messageBroker를 구현 합니다.
+     * pub/sub 메세징을 구현하기 위해 메세지를 발행하는 요청의 prefix는 /pub로 시작하도록 설정하고 메세지를
+     * 구독하는 요청의 prefix는 /sub로 시작하도록 설정합니다.
+     * 추가로 stomp websocket을 이용하기위한 endpoint는 /ws-stomp로 설정 합니다.
+     * 현재 설정 값에 의한 개발서버 주소 : ws://localhost:8080/ws-stomp
      */
+
     @Override
-    public void registerWebSocketHandlers(WebSocketHandlerRegistry registry) {
-        registry.addHandler(webSocketHandler, "/ws/chat").setAllowedOrigins("*");
+    public void registerStompEndpoints(StompEndpointRegistry registry) {
+        registry.addEndpoint("/ws-stomp")
+                .setAllowedOrigins("*")
+                .withSockJS(); // socketJs 사용
+    }
+
+    @Override
+    public void configureMessageBroker(MessageBrokerRegistry registry) {
+        registry.enableSimpleBroker("/sub");
+        registry.setApplicationDestinationPrefixes("/pub");
     }
 }

@@ -1,38 +1,23 @@
 package com.example.websocket.chatting.controller;
 
-import com.example.websocket.chatting.dto.ChatRoomRequestDto;
-import com.example.websocket.chatting.dto.ChatRoomResponseDto;
-import com.example.websocket.service.ChatService;
+import com.example.websocket.chatting.dto.ChatMessageRequestDto;
+import com.example.websocket.commonEnumType.MessageType;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.messaging.handler.annotation.MessageMapping;
+import org.springframework.messaging.simp.SimpMessageSendingOperations;
+import org.springframework.stereotype.Controller;
 
-import javax.validation.Valid;
-
-@Slf4j
 @RequiredArgsConstructor
-@RestController
-@RequestMapping("/chat")
+@Controller("/chat")
 public class ChatController {
-    private final ChatService chatService;
+    private final SimpMessageSendingOperations messagingTemplate;
 
-    @PostMapping("/createRoom")
-    public ResponseEntity<ChatRoomResponseDto> createRoom(
-            @RequestBody @Valid ChatRoomRequestDto chatRoomReqDto) {
-        return ResponseEntity.ok(chatService.createRoom(chatRoomReqDto.getName()));
-    }
-
-    @GetMapping("/findAllRoom")
-    public ResponseEntity<?> findAllRoom() {
-        try {
-            return ResponseEntity.ok(chatService.findAllRoom());
-        } catch (Exception e) {
-            log.error(e.getMessage(), e);
-            return ResponseEntity
-                    .status(HttpStatus.BAD_REQUEST)
-                    .body("채팅방이 없거나 조회할 수 없습니다.");
+    @MessageMapping("/message")
+    public void message(ChatMessageRequestDto messageRequestDto) {
+        if (MessageType.JOIN.equals(messageRequestDto.getType())) {
+            messageRequestDto.setMessage(messageRequestDto.getSender() + "님이 입장 하셨습니다.");
         }
+
+        messagingTemplate.convertAndSend("/sub/chat/room/" + messageRequestDto.getRoomId(), messageRequestDto);
     }
 }

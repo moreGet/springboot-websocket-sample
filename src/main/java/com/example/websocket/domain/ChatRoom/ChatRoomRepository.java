@@ -31,7 +31,9 @@ public class ChatRoomRepository {
 
     // 모든 채팅방 조회
     public List<ChatRoom> findAllRoom() {
-        return new ArrayList<>(chatRooms.values());
+        List<ChatRoom> roomList = new ArrayList<ChatRoom>(chatRooms.values());
+        Collections.reverse(roomList); // 채팅방 내림차순
+        return roomList;
     }
 
     public ChatRoom findRoomById(String roomId) {
