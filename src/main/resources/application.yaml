@@ -13,6 +13,13 @@ spring:
 ## SERVER PORT
 server:
   port: 8080
+  ## HTTP EXCEPTION
+  error:
+    include-exception: false
+    include-stacktrace: never
+    path: "/error"
+    whitelabel:
+      enabled: true
 
 ## LOG LEVEL
 logging:

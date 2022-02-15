@@ -5,9 +5,11 @@ import com.example.websocket.domain.ChatMessage.ChatMessage;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 
 @Setter
 @Getter
+@ToString
 public class ChatMessageRequestDto {
     private MessageType type;  // 메세지 타입
     private String roomId; // 방번호

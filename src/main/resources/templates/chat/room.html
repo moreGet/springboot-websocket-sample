@@ -35,16 +35,16 @@
         </li>
     </ul>
 </div>
-<!-- JavaScript -->
+
+<!-- Init JavaScript -->
 <script src="/webjars/vue/2.5.16/dist/vue.min.js"></script>
 <script src="/webjars/axios/0.17.1/dist/axios.min.js"></script>
 <script>
-    var vm = new Vue({
+    let vm = new Vue({
         el: '#app',
         data: {
             room_name : '',
-            chatrooms: [
-            ]
+            chatrooms: []
         },
         created() {
             this.findAllRoom();
@@ -61,21 +61,25 @@
                     let params = new URLSearchParams();
                     params.append("roomId", this.room_name);
                     axios.post('/chat/createRoom', params)
-                        .then(
-                            response => {
-                                alert(response.data.name+" 방 개설에 성공하였습니다.")
-                                this.room_name = '';
-                                // this.findAllRoom();
-                            }
-                        )
-                        .catch( response => { alert("채팅방 개설에 실패하였습니다."); } );
+                        .then(response => {
+                            alert(response.data.name+" 방 개설에 성공하였습니다.")
+                            this.room_name = '';
+                            this.findAllRoom();
+                         })
+                        .catch(response => { alert("채팅방 개설에 실패하였습니다.");});
                 }
             },
             enterRoom: function(roomId) {
-                var sender = prompt('대화명을 입력해 주세요.');
-                if(sender != "") {
+                let sender = prompt('대화명을 입력해 주세요.');
+                if(sender != "" && sender != null) {
+                    console.log("ROOM_ID : ", roomId);
+                    console.log("SENDER : ", sender);
+
+                    // 로컬 스토리지에 해당 정보 저장
                     localStorage.setItem('wschat.sender',sender);
                     localStorage.setItem('wschat.roomId',roomId);
+
+                    // 방 입장
                     location.href="/chat/room/enter/"+roomId;
                 }
             }

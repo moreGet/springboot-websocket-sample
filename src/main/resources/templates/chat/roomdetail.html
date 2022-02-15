@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en" xmlns:v-on="http://www.w3.org/1999/xhtml">
+<html lang="en" xmlns:v-on="http://www.w3.org/1999/xhtml" xmlns:v-bind="http://www.w3.org/1999/xhtml">
 <head>
     <title>Websocket ChatRoom</title>
     <!-- Required meta tags -->
@@ -43,12 +43,14 @@
 <script>
     //alert(document.title);
     // websocket & stomp initialize
-    var sock = new SockJS("/ws-stomp");
-    var ws = Stomp.over(sock);
-    var reconnect = 0;
+    let sock = new SockJS("/ws-stomp");
+    let ws = Stomp.over(sock);
+    let reconnect = 0;
     // vue.js
-    var vm = new Vue({
+    let vm = new Vue({
         el: '#app',
+
+        // data 정의
         data: {
             roomId: '',
             room: {},
@@ -56,6 +58,8 @@
             message: '',
             messages: []
         },
+
+        // 생성자 정의
         created() {
             this.roomId = localStorage.getItem('wschat.roomId');
             this.sender = localStorage.getItem('wschat.sender');
@@ -63,7 +67,7 @@
         },
         methods: {
             findRoom: function() {
-                axios.get('/chat/room/'+this.roomId).then(response => { this.room = response.data; });
+                axios.post('/chat/room/'+this.roomId).then(response => { this.room = response.data; });
             },
             sendMessage: function() {
                 ws.send("/pub/chat/message", {}, JSON.stringify({type:'TALK', roomId:this.roomId, sender:this.sender, message:this.message}));

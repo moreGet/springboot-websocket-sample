@@ -1,9 +1,7 @@
 package com.example.websocket.service;
 
 import com.example.websocket.chatting.dto.ChatRoomResponseDto;
-import com.example.websocket.domain.ChatRoom.ChatRoom;
 import com.example.websocket.domain.ChatRoom.ChatRoomRepository;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -15,8 +13,8 @@ import java.util.stream.Collectors;
 @Slf4j
 @RequiredArgsConstructor
 @Service
-public class ChatService {
-    private final ObjectMapper objectMapper;
+public class ChatRoomService {
+//    private final ObjectMapper objectMapper;
     private final ChatRoomRepository chatRoomRepository;
 
     // 레포지토리 에서 생성 후 조회
@@ -41,10 +39,11 @@ public class ChatService {
     }
 
     // 채팅방 ID조회
-    public ChatRoom findById(String roomId) {
+    public ChatRoomResponseDto findById(String roomId) {
         log.debug("채팅방 ID 단일 조회");
         return Optional.ofNullable(
                 chatRoomRepository.findRoomById(roomId))
+                .map(ChatRoomResponseDto::new)
                 .orElseThrow(() -> {
                    throw new IllegalArgumentException("해당 ID로 조회할 수 없습니다.");
                 });

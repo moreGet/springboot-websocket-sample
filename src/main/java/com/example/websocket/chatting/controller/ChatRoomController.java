@@ -1,9 +1,7 @@
 package com.example.websocket.chatting.controller;
 
-import com.example.websocket.chatting.dto.ChatRoomRequestDto;
 import com.example.websocket.chatting.dto.ChatRoomResponseDto;
-import com.example.websocket.domain.ChatRoom.ChatRoom;
-import com.example.websocket.service.ChatService;
+import com.example.websocket.service.ChatRoomService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -19,7 +17,7 @@ import javax.validation.Valid;
 @Controller
 @RequestMapping("/chat")
 public class ChatRoomController {
-    private final ChatService chatService;
+    private final ChatRoomService chatService;
 
     // 채팅 리스트 화면
     @GetMapping("/room")
@@ -27,39 +25,46 @@ public class ChatRoomController {
         return "/chat/room";
     }
 
-    @PostMapping("/createRoom")
-    @ResponseBody
-    public ResponseEntity<ChatRoomResponseDto> createRoom(
-            @RequestBody @Valid String roomId) {
-        return ResponseEntity.ok(chatService.createRoom(roomId));
-    }
-
     @GetMapping("/findAllRoom")
     @ResponseBody
     public ResponseEntity<?> findAllRoom() {
         try {
+            log.debug("##### 모든 채팅방 조회");
             return ResponseEntity.ok(chatService.findAllRoom());
         } catch (Exception e) {
             log.error(e.getMessage(), e);
             return ResponseEntity
                     .status(HttpStatus.BAD_REQUEST)
-                    .body("채팅방이 없거나 조회할 수 없습니다.");
+                    .body("##### 채팅방이 없거나 조회할 수 없습니다.");
         }
     }
 
     // 채팅방 입장 화면
     @GetMapping("/room/enter/{roomId}")
     public String roomDetail(Model model, @PathVariable String roomId) {
+        log.debug("##### 채팅방 입장 {}", roomId);
+        String redirectUrl = "/chat/roomdetail";
+
+        chatService.findById(roomId); // 채팅방 조회
         model.addAttribute("roomId", roomId);
-        return "/chat/roomdetail";
+
+        return redirectUrl;
+    }
+
+    // 채팅방 생성
+    @PostMapping("/createRoom")
+    @ResponseBody
+    public ResponseEntity<ChatRoomResponseDto> createRoom(
+            @RequestBody @Valid String roomId) {
+        log.debug("##### 채팅방 생성 {}", roomId);
+        return ResponseEntity.ok(chatService.createRoom(roomId));
     }
 
     // 특정 채팅방 조회
     @PostMapping("/room/{roomId}")
     @ResponseBody
-    public void roomInfo(@PathVariable String roomId) {
-        log.debug("##### 방 생성 동작");
-        log.debug(roomId);
-//        return chatService.findById(roomId);
+    public ChatRoomResponseDto roomInfo(@PathVariable String roomId) {
+        log.debug("##### 특정 채팅방 조회 {}", roomId);
+        return chatService.findById(roomId);
     }
 }
