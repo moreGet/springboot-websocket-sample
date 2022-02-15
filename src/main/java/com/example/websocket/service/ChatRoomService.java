@@ -19,33 +19,33 @@ public class ChatRoomService {
 
     // 레포지토리 에서 생성 후 조회
     public ChatRoomResponseDto createRoom(String name) {
-        log.debug("채팅방 생성");
+        log.debug("##### 채팅방 생성");
         return Optional.ofNullable(
                 new ChatRoomResponseDto(chatRoomRepository.createRoom(name))).orElseThrow(() -> {
-                    throw new IllegalArgumentException("채팅방이 생성되지 않았습니다.");
+                    throw new IllegalArgumentException("##### 채팅방이 생성되지 않았습니다.");
                 });
     }
 
     // 채팅방 조회
     public List<ChatRoomResponseDto> findAllRoom() {
-        log.debug("채팅방 전체 조회");
+        log.debug("##### 채팅방 전체 조회");
         return Optional.ofNullable(chatRoomRepository.findAllRoom().parallelStream()
                 .map(ChatRoomResponseDto::new)
                 .collect(Collectors.toList()))
                 .filter(list -> list.size() > 0)
                 .orElseThrow(() -> {
-                    throw new IllegalArgumentException("채팅방이 없거나 조회할 수 없습니다.");
+                    throw new IllegalArgumentException("##### 채팅방이 없거나 조회할 수 없습니다.");
                 });
     }
 
     // 채팅방 ID조회
     public ChatRoomResponseDto findById(String roomId) {
-        log.debug("채팅방 ID 단일 조회");
+        log.debug("##### 채팅방 ID 단일 조회");
         return Optional.ofNullable(
                 chatRoomRepository.findRoomById(roomId))
                 .map(ChatRoomResponseDto::new)
                 .orElseThrow(() -> {
-                   throw new IllegalArgumentException("해당 ID로 조회할 수 없습니다.");
+                   throw new IllegalArgumentException("##### 해당 ID로 조회할 수 없습니다.");
                 });
     }
 
