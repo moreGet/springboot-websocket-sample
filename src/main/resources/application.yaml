@@ -17,9 +17,9 @@ server:
   error:
     include-exception: false
     include-stacktrace: never
-    path: "/error"
+    path: /error
     whitelabel:
-      enabled: true
+      enabled: false
 
 ## LOG LEVEL
 logging:
