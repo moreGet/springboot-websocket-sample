@@ -11,6 +11,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.List;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -32,10 +33,10 @@ public class ChatRoomController {
             log.debug("##### 모든 채팅방 조회");
             return ResponseEntity.ok(chatService.findAllRoom());
         } catch (Exception e) {
-            log.error(e.getMessage(), e);
+            log.debug(e.getMessage());
             return ResponseEntity
-                    .status(HttpStatus.BAD_REQUEST)
-                    .body("##### 채팅방이 없거나 조회할 수 없습니다.");
+                    .status(HttpStatus.NO_CONTENT)
+                    .build();
         }
     }
 

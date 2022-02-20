@@ -42,9 +42,7 @@
 <!-- JavaScript -->
 <!--<script src="/webjars/vue/2.5.16/dist/vue.min.js"></script>-->
 <!--<script src="/webjars/axios/0.17.1/dist/axios.min.js"></script>-->
-<!--<script src="/webjars/sockjs-client/1.1.2/sockjs.min.js"></script>-->
-<!--<script src="/webjars/stomp-websocket/2.3.3-1/stomp.min.js"></script>-->
-<script src="/webjars/vue/3.2.20/dist/vue.global.prod.js"></script>
+<script src="/webjars/vue/2.6.14/dist/vue.min.js"></script>
 <script src="/webjars/axios/0.25.0/dist/axios.min.js"></script>
 <script src="/webjars/sockjs-client/1.5.1/sockjs.min.js"></script>
 <script src="/webjars/stomp-websocket/2.3.4/stomp.min.js"></script>
@@ -55,9 +53,8 @@
     let ws = Stomp.over(sock);
     let reconnect = 0;
     // vue.js
-    const vm = Vue.createApp({
+    const vm = new Vue({
         el: '#app',
-
         // data 정의
         data: {
             roomId: '',

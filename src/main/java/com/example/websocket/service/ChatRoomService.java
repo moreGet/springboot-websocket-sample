@@ -32,7 +32,7 @@ public class ChatRoomService {
         return Optional.ofNullable(chatRoomRepository.findAllRoom().parallelStream()
                 .map(ChatRoomResponseDto::new)
                 .collect(Collectors.toList()))
-                .filter(list -> list.size() > 0)
+                .filter(list -> list.size() >= 1)
                 .orElseThrow(() -> {
                     throw new IllegalArgumentException("##### 채팅방이 없거나 조회할 수 없습니다.");
                 });
