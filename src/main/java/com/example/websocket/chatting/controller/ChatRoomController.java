@@ -1,7 +1,9 @@
 package com.example.websocket.chatting.controller;
 
+import com.example.websocket.chatting.dto.ChatRoomRequestDto;
 import com.example.websocket.chatting.dto.ChatRoomResponseDto;
 import com.example.websocket.service.ChatRoomService;
+import com.fasterxml.jackson.databind.json.JsonMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -30,8 +32,16 @@ public class ChatRoomController {
     @ResponseBody
     public ResponseEntity<?> findAllRoom() {
         try {
+            List<ChatRoomResponseDto> roomList = chatService.findAllRoom();
             log.debug("##### 모든 채팅방 조회");
-            return ResponseEntity.ok(chatService.findAllRoom());
+
+            JsonMapper mapper = JsonMapper.builder().build();
+            String roomListJsonStr = mapper.writeValueAsString(roomList);
+
+            log.debug("일반 문자열 : [ {} ]", roomList.get(0));
+            log.debug("JSON_STR : [ {} ]", roomListJsonStr);
+
+            return ResponseEntity.ok(roomList);
         } catch (Exception e) {
             log.debug(e.getMessage());
             return ResponseEntity
@@ -56,9 +66,25 @@ public class ChatRoomController {
     @PostMapping("/createRoom")
     @ResponseBody
     public ResponseEntity<ChatRoomResponseDto> createRoom(
-            @RequestBody @Valid String roomId) {
-        log.debug("##### 채팅방 생성 {}", roomId);
-        return ResponseEntity.ok(chatService.createRoom(roomId));
+            @RequestBody @Valid String jsonString) {
+//            @RequestBody @Valid String roomName) {
+
+        JsonMapper mapper = JsonMapper.builder().build();
+        ChatRoomRequestDto chatRoomRequestDto = null;
+
+        try {
+            chatRoomRequestDto =
+                    mapper.readValue(jsonString, ChatRoomRequestDto.class);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        String roomName = chatRoomRequestDto.getRoomName();
+        String roomId = chatRoomRequestDto.getRoomId();
+        log.debug("##### 요청 받은 ROOM_NAME : {}", roomName);
+        log.debug("##### 요청 받은 ROOM_ID : {}", roomId);
+
+        return ResponseEntity.ok(chatService.createRoom(roomName));
     }
 
     // 특정 채팅방 조회
