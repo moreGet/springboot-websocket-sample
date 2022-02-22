@@ -67,7 +67,7 @@ public class ChatRoomController {
     @ResponseBody
     public ResponseEntity<ChatRoomResponseDto> createRoom(
             @RequestBody @Valid String jsonString) {
-//            @RequestBody @Valid String roomName) {
+//            @RequestBody @Valid ChatRoomRequestDto chatRoomRequestDto) {
 
         JsonMapper mapper = JsonMapper.builder().build();
         ChatRoomRequestDto chatRoomRequestDto = null;
@@ -76,7 +76,7 @@ public class ChatRoomController {
             chatRoomRequestDto =
                     mapper.readValue(jsonString, ChatRoomRequestDto.class);
         } catch (Exception e) {
-            e.printStackTrace();
+            log.error(e.getMessage(), e);
         }
 
         String roomName = chatRoomRequestDto.getRoomName();
